@@ -2055,7 +2055,7 @@ body.visible-sidebar{
 
 .hidden-bar .nav-logo-box img{
   width: 160px;
-  max-height: 40px;
+  /* max-height: 40px; */
 }
 
 .hidden-bar ol,
