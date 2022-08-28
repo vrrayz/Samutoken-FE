@@ -253,8 +253,8 @@ p{
   margin: 0;
   line-height: 24px;
   padding: 8px 30px;
-  border: 2px solid #414073;
-  color: #ffffff;
+  border: 2px solid orange;
+  color: orange;
   font-weight: 500;
   font-size: 16px;
   text-align: center;
@@ -291,9 +291,9 @@ p{
 }
 
 .btn-style-two:hover{
-  color: #ffffff;
-  background: #3772FF;
-  border-color: #3772FF;
+  color: orange;
+  background: #fff;
+  border-color: orange;
 }
 
 .btn-style-three{
@@ -304,13 +304,13 @@ p{
   margin: 0;
   line-height: 24px;
   padding: 10px 30px;
-  border: 2px solid #48DCA8;
-  color: #ffffff;
+  border: 2px solid orange;
+  color: #fff;
   font-weight: 600;
   font-size: 16px;
   text-align: center;
   text-transform: uppercase;
-  background: #48DCA8;
+  background: darkorange;
   box-shadow: 0px 15px 30px rgba(72, 220, 168, 0.25);
   border-radius: 8px;
   -moz-transition:all 0.3s ease;
@@ -325,6 +325,9 @@ p{
   display: block;
   top: 0;
   z-index: 1;
+}
+.btn-style-three:disabled{
+  background-color: rgb(238, 178, 67);
 }
 
 .btn-style-three i{
@@ -343,9 +346,9 @@ p{
 }
 
 .btn-style-three:hover{
-  color: #48DCA8;
-  background: none;
-  border-color: #48DCA8;
+  color: orange;
+  background: white;
+  border-color: orange;
 }
 
 .btn-style-four{
@@ -17790,4 +17793,7 @@ body.home-nine .scroll-to-top img{
 }
 .roadmap-list {
   list-style-image: url(/images/bullet_logo.png);
+}
+.modal-body, .modal-header, h5.modal-title{
+  color: #666 !important;
 }
