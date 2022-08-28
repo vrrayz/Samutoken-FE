@@ -1,361 +1,805 @@
 import { BigNumber, ethers } from "./ethers-5.2.esm.min.js";
 
-// Contract addresses and abi == mainnet
-// const tokenAddress = "0x22D0ff0e2430e0536196Ae10Ec5441d931Fa9D82";
-// const cakeLpAddress = "0x0b49b30c66e251a849e83dd8efa8205e863aa3b8";
-// const stakingContractAddress = "0x366E3f426545dcd635139A3452aCfBEF782E10AB";
 
-// Contract addresses and abi == testnet
-const tokenAddress = "0xc7FA4424C6bb96ADCA9cb9cFc4A9CAF7cA074F1a";
-const cakeLpAddress = "0xD50b89510168131853D5e42C3e57dCe2B3bFc96A";
-const stakingContractAddress = "0x1793419Ba987ae77D909c2142812601F33B9eCc3";
+
+// Contract addresses and abi == mainnet
+const tokenAddress = "0x81A75D60f97f441B4d7905c90d8B7237F87f1251";
+const cakeLpAddress = "0x5c914d786bA5d5D5F1F720039b3Fd20B355a79D7";
+const stakingContractAddress = "0x665C34282d8929ea6F5AdeADc580146C1FD13D37";
 const tokenABI = [
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "Approval",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "Transfer",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			}
-		],
-		"name": "allowance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "decimals",
-		"outputs": [
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "subtractedValue",
-				"type": "uint256"
-			}
-		],
-		"name": "decreaseAllowance",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "addedValue",
-				"type": "uint256"
-			}
-		],
-		"name": "increaseAllowance",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "mint",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalSupply",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	}
-]
+  {
+    inputs: [
+      { internalType: "string", name: "name_", type: "string" },
+      { internalType: "string", name: "symbol_", type: "string" },
+      { internalType: "uint256", name: "totalSupply_", type: "uint256" },
+      { internalType: "address[4]", name: "addrs", type: "address[4]" },
+      {
+        internalType: "uint256[4]",
+        name: "buyFeeSetting_",
+        type: "uint256[4]",
+      },
+      {
+        internalType: "uint256[4]",
+        name: "sellFeeSetting_",
+        type: "uint256[4]",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenBalanceForReward_",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "payable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "isExcluded",
+        type: "bool",
+      },
+    ],
+    name: "ExcludeFromFees",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address[]",
+        name: "accounts",
+        type: "address[]",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "isExcluded",
+        type: "bool",
+      },
+    ],
+    name: "ExcludeMultipleAccountsFromFees",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "newValue",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "oldValue",
+        type: "uint256",
+      },
+    ],
+    name: "GasForProcessingUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newLiquidityWallet",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldLiquidityWallet",
+        type: "address",
+      },
+    ],
+    name: "LiquidityWalletUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "iterations",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "claims",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "lastProcessedIndex",
+        type: "uint256",
+      },
+      { indexed: true, internalType: "bool", name: "automatic", type: "bool" },
+      { indexed: false, internalType: "uint256", name: "gas", type: "uint256" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "processor",
+        type: "address",
+      },
+    ],
+    name: "ProcessedDividendTracker",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokensSwapped",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "SendDividends",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "pair", type: "address" },
+      { indexed: true, internalType: "bool", name: "value", type: "bool" },
+    ],
+    name: "SetAutomatedMarketMakerPair",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokensSwapped",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "ethReceived",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokensIntoLiqudity",
+        type: "uint256",
+      },
+    ],
+    name: "SwapAndLiquify",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newAddress",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldAddress",
+        type: "address",
+      },
+    ],
+    name: "UpdateDividendTracker",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newAddress",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldAddress",
+        type: "address",
+      },
+    ],
+    name: "UpdateUniswapV2Router",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "AmountLiquidityFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "AmountMarketingFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "AmountTokenRewardsFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "account", type: "address" },
+      { internalType: "bool", name: "value", type: "bool" },
+    ],
+    name: "EnemyAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "_isEnemy",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "_marketingWalletAddress",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "spender", type: "address" },
+    ],
+    name: "allowance",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "approve",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "automatedMarketMakerPairs",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyDeadFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyLiquidityFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyMarketingFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyTokenRewardsFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "claim",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "deadWallet",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "subtractedValue", type: "uint256" },
+    ],
+    name: "decreaseAllowance",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "dividendTokenBalanceOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "dividendTracker",
+    outputs: [
+      {
+        internalType: "contract TokenDividendTracker",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "excludeFromDividends",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "account", type: "address" },
+      { internalType: "bool", name: "excluded", type: "bool" },
+    ],
+    name: "excludeFromFees",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address[]", name: "accounts", type: "address[]" },
+      { internalType: "bool", name: "excluded", type: "bool" },
+    ],
+    name: "excludeMultipleAccountsFromFees",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "gasForProcessing",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "getAccountDividendsInfo",
+    outputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "int256", name: "", type: "int256" },
+      { internalType: "int256", name: "", type: "int256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "index", type: "uint256" }],
+    name: "getAccountDividendsInfoAtIndex",
+    outputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "int256", name: "", type: "int256" },
+      { internalType: "int256", name: "", type: "int256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getClaimWait",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLastProcessedIndex",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getNumberOfDividendTokenHolders",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTotalDividendsDistributed",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "addedValue", type: "uint256" },
+    ],
+    name: "increaseAllowance",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "isExcludedFromDividends",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "isExcludedFromFees",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "gas", type: "uint256" }],
+    name: "processDividendTracker",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "rewardToken",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sellDeadFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sellLiquidityFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sellMarketingFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sellTokenRewardsFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "pair", type: "address" },
+      { internalType: "bool", name: "value", type: "bool" },
+    ],
+    name: "setAutomatedMarketMakerPair",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "liquidity", type: "uint256" },
+      { internalType: "uint256", name: "rewardsFee", type: "uint256" },
+      { internalType: "uint256", name: "marketingFee", type: "uint256" },
+      { internalType: "uint256", name: "deadFee", type: "uint256" },
+    ],
+    name: "setBuyTaxes",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "addr", type: "address" }],
+    name: "setDeadWallet",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address payable", name: "wallet", type: "address" },
+    ],
+    name: "setMarketingWallet",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "liquidity", type: "uint256" },
+      { internalType: "uint256", name: "rewardsFee", type: "uint256" },
+      { internalType: "uint256", name: "marketingFee", type: "uint256" },
+      { internalType: "uint256", name: "deadFee", type: "uint256" },
+    ],
+    name: "setSelTaxes",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+    name: "setSwapTokensAtAmount",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "swapManual",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "swapTokensAtAmount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSupply",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "recipient", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "transfer",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "sender", type: "address" },
+      { internalType: "address", name: "recipient", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "transferFrom",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "uniswapV2Pair",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "uniswapV2Router",
+    outputs: [
+      {
+        internalType: "contract IUniswapV2Router02",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "claimWait", type: "uint256" }],
+    name: "updateClaimWait",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "newValue", type: "uint256" }],
+    name: "updateGasForProcessing",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "val", type: "uint256" }],
+    name: "updateMinimumTokenBalanceForDividends",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "newAddress", type: "address" }],
+    name: "updateUniswapV2Router",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "withdrawableDividendOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  { stateMutability: "payable", type: "receive" },
+];
 const cakeLpAbi = [
   {
     inputs: [],
@@ -792,367 +1236,367 @@ const cakeLpAbi = [
   },
 ];
 const stakingContractABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "contract ERC20",
-				"name": "_tokenAddress",
-				"type": "address"
-			}
-		],
-		"name": "changeCakeToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract ERC20",
-				"name": "_tokenAddress",
-				"type": "address"
-			}
-		],
-		"name": "changeOriginalToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_split",
-				"type": "uint256"
-			}
-		],
-		"name": "changeSplit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "claimCakeTokenEarnings",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "claimOriginalTokenEarnings",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "depositCake",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "depositOriginalToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_cakeApy",
-				"type": "uint256"
-			}
-		],
-		"name": "setCakeApy",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_originalTokenApy",
-				"type": "uint256"
-			}
-		],
-		"name": "setOriginalTokenApy",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_owner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract ERC20",
-				"name": "_tokenAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "contract ERC20",
-				"name": "_lpAddress",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "withdrawCake",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "withdrawOriginalToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "cakeApy",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "cakeBalance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "cakeLpToken",
-		"outputs": [
-			{
-				"internalType": "contract ERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			}
-		],
-		"name": "calculateUserCakeEarnings",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			}
-		],
-		"name": "calculateUserOriginalTokenEarnings",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "originalToken",
-		"outputs": [
-			{
-				"internalType": "contract ERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "originalTokenApy",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "originalTokenBalance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "stakingDetails",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "lastOriginalTokenClaimTime",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "totalOriginalTokenStaked",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "lastCakeClaimTime",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "totalConvertedCakeStaked",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "totalActualCakeStaked",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalCakeDeposited",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalOriginalTokenDeposited",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-]
+  {
+    inputs: [
+      {
+        internalType: "contract ERC20",
+        name: "_tokenAddress",
+        type: "address",
+      },
+    ],
+    name: "changeCakeToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract ERC20",
+        name: "_tokenAddress",
+        type: "address",
+      },
+    ],
+    name: "changeOriginalToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_split",
+        type: "uint256",
+      },
+    ],
+    name: "changeSplit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "claimCakeTokenEarnings",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "claimOriginalTokenEarnings",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "depositCake",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "depositOriginalToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_cakeApy",
+        type: "uint256",
+      },
+    ],
+    name: "setCakeApy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_originalTokenApy",
+        type: "uint256",
+      },
+    ],
+    name: "setOriginalTokenApy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_owner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract ERC20",
+        name: "_tokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "contract ERC20",
+        name: "_lpAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawCake",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawOriginalToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "cakeApy",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "cakeBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "cakeLpToken",
+    outputs: [
+      {
+        internalType: "contract ERC20",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "calculateUserCakeEarnings",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "calculateUserOriginalTokenEarnings",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "originalToken",
+    outputs: [
+      {
+        internalType: "contract ERC20",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "originalTokenApy",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "originalTokenBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "stakingDetails",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "lastOriginalTokenClaimTime",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalOriginalTokenStaked",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "lastCakeClaimTime",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalConvertedCakeStaked",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalActualCakeStaked",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalCakeDeposited",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalOriginalTokenDeposited",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
 
 //  Create WalletConnect Provider
 const wcDefault = new WalletConnectProvider.default({
   rpc: {
-    97: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-    // 56: "https://bsc-dataseed.binance.org/",
+    // 97: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+    56: "https://bsc-dataseed.binance.org/",
   },
 });
 
@@ -1176,21 +1620,21 @@ let connectedStakingDetails = document.getElementsByClassName(
   "connected-staking-details"
 );
 
-// Variables smudge
-let depositSmudgeModal = document.getElementById("depositSmudgeModal");
-let depositSmudgeButton = document.querySelector("#depositSmudge");
-let approveSmudgeButton = document.querySelector("#approveSmudgeButton");
-let stakeSmudgeButton = document.querySelector("#stakeSmudgeButton");
-let depositSmudgeInput = document.querySelector("#depositSmudgeInput");
-let depositSmudgeModalBs = new bootstrap.Modal(depositSmudgeModal);
+// Variables samuInu
+let depositSamuInuModal = document.getElementById("depositSamuInuModal");
+let depositSamuInuButton = document.querySelector("#depositSamuInu");
+let approveSamuInuButton = document.querySelector("#approveSamuInuButton");
+let stakeSamuInuButton = document.querySelector("#stakeSamuInuButton");
+let depositSamuInuInput = document.querySelector("#depositSamuInuInput");
+let depositSamuInuModalBs = new bootstrap.Modal(depositSamuInuModal);
 let zzEarned = document.querySelector("#zzEarned");
 let zzStaked = document.querySelector("#zzStaked");
-let claimSmudgeButton = document.querySelector("#claimSmudge");
+let claimSamuInuButton = document.querySelector("#claimSamuInu");
 
-let withdrawSmudge = document.querySelector("#withdrawSmudge");
-let withdrawSmudgeModalBs = new bootstrap.Modal(withdrawSmudgeModal);
-let withdrawSmudgeButton = document.querySelector("#withdrawSmudgeButton");
-let withdrawSmudgeInput = document.querySelector("#withdrawSmudgeInput");
+let withdrawSamuInu = document.querySelector("#withdrawSamuInu");
+let withdrawSamuInuModalBs = new bootstrap.Modal(withdrawSamuInuModal);
+let withdrawSamuInuButton = document.querySelector("#withdrawSamuInuButton");
+let withdrawSamuInuInput = document.querySelector("#withdrawSamuInuInput");
 
 // Variables cake
 let depositCakeModal = document.getElementById("depositCakeModal");
@@ -1209,42 +1653,42 @@ let withdrawCakeButton = document.querySelector("#withdrawCakeButton");
 let withdrawCakeInput = document.querySelector("#withdrawCakeInput");
 
 // deposit
-depositSmudgeButton.addEventListener("click", function () {
-  toggleDepositSmudgeButton();
+depositSamuInuButton.addEventListener("click", function () {
+  toggleDepositSamuInuButton();
 });
 depositCakeButton.addEventListener("click", function () {
   toggleDepositCakeButton();
 });
 
 //   approve
-approveSmudgeButton.addEventListener("click", function () {
-  approveSmudge(depositSmudgeInput.value);
+approveSamuInuButton.addEventListener("click", function () {
+  approveSamuInu(depositSamuInuInput.value);
 });
 approveCakeButton.addEventListener("click", function () {
   approveCake(depositCakeInput.value);
 });
 
 // stake
-stakeSmudgeButton.addEventListener("click", function () {
-  stakeSmudge(depositSmudgeInput.value);
+stakeSamuInuButton.addEventListener("click", function () {
+  stakeSamuInu(depositSamuInuInput.value);
 });
 stakeCakeButton.addEventListener("click", function () {
   stakeCake(depositCakeInput.value);
 });
 //   claim
-claimSmudgeButton.addEventListener("click", function () {
-  claimSmudge();
+claimSamuInuButton.addEventListener("click", function () {
+  claimSamuInu();
 });
 claimCakeButton.addEventListener("click", function () {
   claimCake();
 });
 
 //   withdraw
-withdrawSmudge.addEventListener("click", function () {
-  toggleWithdrawSmudgeButton();
+withdrawSamuInu.addEventListener("click", function () {
+  toggleWithdrawSamuInuButton();
 });
-withdrawSmudgeButton.addEventListener("click", function () {
-  withdrawSmudgeToken(withdrawSmudgeInput.value);
+withdrawSamuInuButton.addEventListener("click", function () {
+  withdrawSamuInuToken(withdrawSamuInuInput.value);
 });
 withdrawCake.addEventListener("click", function () {
   toggleWithdrawCakeButton();
@@ -1254,16 +1698,16 @@ withdrawCakeButton.addEventListener("click", function () {
 });
 
 // modal toggles
-function toggleDepositSmudgeButton() {
-  getUserSmudgeBalance();
-  depositSmudgeModalBs.show();
+function toggleDepositSamuInuButton() {
+  getUserSamuInuBalance();
+  depositSamuInuModalBs.show();
 }
 function toggleDepositCakeButton() {
   getUserCakeBalance();
   depositCakeModalBs.show();
 }
-function toggleWithdrawSmudgeButton() {
-  withdrawSmudgeModalBs.show();
+function toggleWithdrawSamuInuButton() {
+  withdrawSamuInuModalBs.show();
 }
 function toggleWithdrawCakeButton() {
   withdrawCakeModalBs.show();
@@ -1371,12 +1815,12 @@ async function getTokenSupply() {
   // totalS = BigNumber.from(totalS._hex).toString()
   tokenSupply = totalS;
 }
-async function getUserSmudgeBalance() {
+async function getUserSamuInuBalance() {
   let balance = await tokenContract.balanceOf(userAddress);
   balance = ethers.utils.formatUnits(balance, decimals);
-  let smudgeBalanceElement = document.querySelectorAll(".smudgeBalance");
-  for (let index = 0; index < smudgeBalanceElement.length; index++) {
-    smudgeBalanceElement[index].innerText = balance;
+  let samuInuBalanceElement = document.querySelectorAll(".samuInuBalance");
+  for (let index = 0; index < samuInuBalanceElement.length; index++) {
+    samuInuBalanceElement[index].innerText = balance;
   }
 }
 async function getUserCakeBalance() {
@@ -1387,7 +1831,7 @@ async function getUserCakeBalance() {
     cakeBalanceElement[index].innerText = balance;
   }
 }
-async function approveSmudge(amount) {
+async function approveSamuInu(amount) {
   // console.log(amount)
   let nAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
   // let nAmount = ethers.utils.parseUnits(amount, decimals);
@@ -1396,8 +1840,8 @@ async function approveSmudge(amount) {
     .approve(stakingContractAddress, nAmount)
     .then((res) => {
       tokenContract.on("Approval", (owner, spender, amount, event) => {
-        approveSmudgeButton.style.display = "none";
-        stakeSmudgeButton.removeAttribute("disabled");
+        approveSamuInuButton.style.display = "none";
+        stakeSamuInuButton.removeAttribute("disabled");
         console.log("Approved " + spender + " allowance " + amount);
       });
     });
@@ -1417,7 +1861,7 @@ async function approveCake(amount) {
       });
     });
 }
-async function stakeSmudge(amount) {
+async function stakeSamuInu(amount) {
   // console.log(amount)
   let nAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
   // let nAmount = ethers.utils.parseUnits(amount, decimals);
@@ -1426,11 +1870,11 @@ async function stakeSmudge(amount) {
     .depositOriginalToken(nAmount)
     .then((res) => {
       tokenContract.on("Transfer", (from, to, value, event) => {
-        // approveSmudgeButton.style.display = "none";
-        // stakeSmudgeButton.removeAttribute("disabled");
+        // approveSamuInuButton.style.display = "none";
+        // stakeSamuInuButton.removeAttribute("disabled");
         // console.log(from+" Transferred  "+value+" to "+to);
         if (from == userAddress && to == stakingContractAddress) {
-          depositSmudgeModalBs.hide();
+          depositSamuInuModalBs.hide();
           updateDetails();
         }
       });
@@ -1443,8 +1887,8 @@ async function stakeCake(amount) {
     .depositCake(nAmount)
     .then((res) => {
       cakeLpContract.on("Transfer", (from, to, value, event) => {
-        // approveSmudgeButton.style.display = "none";
-        // stakeSmudgeButton.removeAttribute("disabled");
+        // approveSamuInuButton.style.display = "none";
+        // stakeSamuInuButton.removeAttribute("disabled");
         // console.log(from+" Transferred  "+value+" to "+to);
         if (from == userAddress && to == stakingContractAddress) {
           depositCakeModalBs.hide();
@@ -1502,7 +1946,7 @@ async function getZZEarned() {
   //   let percentageValue = (currentPercentageReturns * 100) / totalOriginalTokenStaked;
   //   // console.log(currentPercentageReturns)
   //   if(percentageValue >= 1){
-  //     claimSmudgeButton.removeAttribute('disabled');
+  //     claimSamuInuButton.removeAttribute('disabled');
   //   }
   //   return parseInt(currentPercentageReturns) + " ("+percentageValue.toFixed(2)+"%)";
   // }
@@ -1545,7 +1989,7 @@ async function getZZCakeStaked() {
   return ethers.utils.formatUnits(zS.totalActualCakeStaked, decimals);
   // return zE
 }
-async function claimSmudge() {
+async function claimSamuInu() {
   stakingContract = new ethers.Contract(
     stakingContractAddress,
     stakingContractABI,
@@ -1557,8 +2001,8 @@ async function claimSmudge() {
     .claimOriginalTokenEarnings()
     .then((res) => {
       tokenContract.on("Transfer", (from, to, value, event) => {
-        // approveSmudgeButton.style.display = "none";
-        // stakeSmudgeButton.removeAttribute("disabled");
+        // approveSamuInuButton.style.display = "none";
+        // stakeSamuInuButton.removeAttribute("disabled");
         // console.log(from+" Transferred  "+value+" to "+to);
         if (from == stakingContractAddress && to == userAddress) {
           updateDetails();
@@ -1584,7 +2028,7 @@ async function claimCake() {
       });
     });
 }
-async function withdrawSmudgeToken(amount) {
+async function withdrawSamuInuToken(amount) {
   let nAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
   stakingContract = new ethers.Contract(
     stakingContractAddress,
@@ -1597,12 +2041,12 @@ async function withdrawSmudgeToken(amount) {
     .withdrawOriginalToken(nAmount)
     .then((res) => {
       tokenContract.on("Transfer", (from, to, value, event) => {
-        // approveSmudgeButton.style.display = "none";
-        // stakeSmudgeButton.removeAttribute("disabled");
+        // approveSamuInuButton.style.display = "none";
+        // stakeSamuInuButton.removeAttribute("disabled");
         // console.log(from+" Transferred  "+value+" to "+to);
         if (from == stakingContractAddress && to == userAddress) {
           updateDetails();
-          withdrawSmudgeModalBs.hide();
+          withdrawSamuInuModalBs.hide();
         }
       });
     });
@@ -1620,8 +2064,8 @@ async function withdrawCakeToken(amount) {
     .withdrawCake(nAmount)
     .then((res) => {
       cakeLpContract.on("Transfer", (from, to, value, event) => {
-        // approveSmudgeButton.style.display = "none";
-        // stakeSmudgeButton.removeAttribute("disabled");
+        // approveSamuInuButton.style.display = "none";
+        // stakeSamuInuButton.removeAttribute("disabled");
         // console.log(from+" Transferred  "+value+" to "+to);
         if (from == stakingContractAddress && to == userAddress) {
           updateDetails();
